@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neusoft.nepserver.mapper.AdminsMapper">
+    
+    <select id="getAdminsByCode" resultType="com.neusoft.nepserver.entity.Admins">
+        SELECT admin_id, admin_name, admin_password
+        FROM admins
+        WHERE admin_id = #{adminId} AND admin_password = #{adminPassword}
+    </select>
+    
+</mapper>

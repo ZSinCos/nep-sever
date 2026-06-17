@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neusoft.nepserver.mapper.GridMemberMapper">
+    
+    <select id="listGridMemberByProvinceId" resultType="com.neusoft.nepserver.entity.GridMember">
+        SELECT gm_id, gm_name, gm_password, gm_tel, province_id, city_id, gm_state
+        FROM grid_member
+        WHERE province_id = #{provinceId} AND city_id = #{cityId} AND gm_state = 0
+        ORDER BY gm_id
+    </select>
+    
+    <select id="getGridMemberByCodeByPass" resultType="com.neusoft.nepserver.entity.GridMember">
+        SELECT gm_id, gm_name, gm_password, gm_tel, province_id, city_id, gm_state
+        FROM grid_member
+        WHERE gm_id = #{gmId} AND gm_password = #{gmPassword}
+    </select>
+    
+</mapper>

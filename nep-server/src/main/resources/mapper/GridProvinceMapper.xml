@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neusoft.nepserver.mapper.GridProvinceMapper">
+    
+    <select id="listGridProvinceAll" resultType="com.neusoft.nepserver.entity.GridProvince">
+        SELECT province_id, province_name
+        FROM grid_province
+        ORDER BY province_id
+    </select>
+    
+</mapper>

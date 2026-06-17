@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neusoft.nepserver.mapper.StatisticsMapper">
+    
+    <insert id="saveStatistics" parameterType="com.neusoft.nepserver.entity.Statistics" useGeneratedKeys="true" keyProperty="staId">
+        INSERT INTO statistics (af_id, gm_id, sta_aqi, sta_pm25, sta_pm10, sta_so2, sta_no2, sta_co, sta_o3, sta_date, sta_time, sta_remark)
+        VALUES (#{afId}, #{gmId}, #{staAqi}, #{staPm25}, #{staPm10}, #{staSo2}, #{staNo2}, #{staCo}, #{staO3}, #{staDate}, #{staTime}, #{staRemark})
+    </insert>
+    
+    <select id="listStatisticsPage" resultType="com.neusoft.nepserver.entity.Statistics">
+        SELECT sta_id, af_id, gm_id, sta_aqi, sta_pm25, sta_pm10, sta_so2, sta_no2, sta_co, sta_o3, sta_date, sta_time, sta_remark
+        FROM statistics
+        <where>
+            <if test="keyword != null and keyword != ''">
+                AND gm_id LIKE CONCAT('%', #{keyword}, '%')
+            </if>
+        </where>
+        ORDER BY sta_date DESC, sta_time DESC
+        LIMIT #{offset}, #{pageSize}
+    </select>
+    
+    <select id="getStatisticsCount" resultType="int">
+        SELECT COUNT(*)
+        FROM statistics
+        <where>
+            <if test="keyword != null and keyword != ''">
+                AND gm_id LIKE CONCAT('%', #{keyword}, '%')
+            </if>
+        </where>
+    </select>
+    
+    <select id="getStatisticsById" resultType="com.neusoft.nepserver.entity.Statistics">
+        SELECT sta_id, af_id, gm_id, sta_aqi, sta_pm25, sta_pm10, sta_so2, sta_no2, sta_co, sta_o3, sta_date, sta_time, sta_remark
+        FROM statistics
+        WHERE sta_id = #{staId}
+    </select>
+    
+    <select id="listProvinceItemTotalStatis" resultType="java.util.Map">
+        SELECT 
+            af.province AS provinceName,
+            COUNT(*) AS totalCount,
+            SUM(CASE WHEN af.af_aqi &gt; 3 THEN 1 ELSE 0 END) AS exceedCount
+        FROM aqi_feedback af
+        WHERE af.af_state = 2
+        GROUP BY af.province
+        ORDER BY exceedCount DESC
+    </select>
+    
+    <select id="listAqiDistributeTotalStatis" resultType="java.util.Map">
+        SELECT 
+            s.sta_aqi AS aqiLevel,
+            a.aqi_name AS aqiName,
+            COUNT(*) AS count
+        FROM statistics s
+        LEFT JOIN aqi a ON s.sta_aqi = a.aqi_id
+        GROUP BY s.sta_aqi, a.aqi_name
+        ORDER BY s.sta_aqi
+    </select>
+    
+    <select id="listAqiTrendTotalStatis" resultType="java.util.Map">
+        SELECT 
+            DATE_FORMAT(STR_TO_DATE(sta_date, '%Y-%m-%d'), '%Y-%m') AS month,
+            COUNT(*) AS count
+        FROM statistics
+        WHERE sta_date &gt;= DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 12 MONTH), '%Y-%m-%d')
+        GROUP BY DATE_FORMAT(STR_TO_DATE(sta_date, '%Y-%m-%d'), '%Y-%m')
+        ORDER BY month
+    </select>
+    
+    <select id="getAqiCount" resultType="long">
+        SELECT COUNT(*) FROM statistics
+    </select>
+    
+    <select id="getAqiGoodCount" resultType="long">
+        SELECT COUNT(*) FROM statistics WHERE sta_aqi &lt;= 2
+    </select>
+    
+</mapper>

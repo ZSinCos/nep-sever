@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neusoft.nepserver.mapper.SupervisorMapper">
+    
+    <select id="getSupervisorById" resultType="com.neusoft.nepserver.entity.Supervisor">
+        SELECT tel_id, supervisor_name, supervisor_password, province, city, register_date
+        FROM supervisor
+        WHERE tel_id = #{telId}
+    </select>
+    
+    <insert id="saveSupervisor" parameterType="com.neusoft.nepserver.entity.Supervisor">
+        INSERT INTO supervisor (tel_id, supervisor_name, supervisor_password, province, city, register_date)
+        VALUES (#{telId}, #{supervisorName}, #{supervisorPassword}, #{province}, #{city}, #{registerDate})
+    </insert>
+    
+    <select id="getSupervisorByIdByPass" resultType="com.neusoft.nepserver.entity.Supervisor">
+        SELECT tel_id, supervisor_name, supervisor_password, province, city, register_date
+        FROM supervisor
+        WHERE tel_id = #{telId} AND supervisor_password = #{supervisorPassword}
+    </select>
+    
+</mapper>

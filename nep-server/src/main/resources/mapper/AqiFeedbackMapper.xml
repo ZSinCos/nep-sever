@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neusoft.nepserver.mapper.AqiFeedbackMapper">
+    
+    <insert id="saveAqiFeedback" parameterType="com.neusoft.nepserver.entity.AqiFeedback" useGeneratedKeys="true" keyProperty="afId">
+        INSERT INTO aqi_feedback (tel_id, province, city, af_address, af_aqi, af_date, af_time, af_img, af_content, af_state)
+        VALUES (#{telId}, #{province}, #{city}, #{afAddress}, #{afAqi}, #{afDate}, #{afTime}, #{afImg}, #{afContent}, 0)
+    </insert>
+    
+    <select id="listAqiFeedbackByTelId" resultType="com.neusoft.nepserver.entity.AqiFeedback">
+        SELECT af_id, tel_id, province, city, af_address, af_aqi, af_date, af_time, af_img, af_content, af_state, gm_id, assign_date, assign_time, admin_id
+        FROM aqi_feedback
+        WHERE tel_id = #{telId}
+        ORDER BY af_date DESC, af_time DESC
+    </select>
+    
+    <select id="listAqiFeedbackPage" resultType="com.neusoft.nepserver.entity.AqiFeedback">
+        SELECT af_id, tel_id, province, city, af_address, af_aqi, af_date, af_time, af_img, af_content, af_state, gm_id, assign_date, assign_time, admin_id
+        FROM aqi_feedback
+        <where>
+            <if test="keyword != null and keyword != ''">
+                AND (province LIKE CONCAT('%', #{keyword}, '%') OR city LIKE CONCAT('%', #{keyword}, '%') OR af_address LIKE CONCAT('%', #{keyword}, '%'))
+            </if>
+        </where>
+        ORDER BY af_date DESC, af_time DESC
+        LIMIT #{offset}, #{pageSize}
+    </select>
+    
+    <select id="getAqiFeedbackCount" resultType="int">
+        SELECT COUNT(*)
+        FROM aqi_feedback
+        <where>
+            <if test="keyword != null and keyword != ''">
+                AND (province LIKE CONCAT('%', #{keyword}, '%') OR city LIKE CONCAT('%', #{keyword}, '%') OR af_address LIKE CONCAT('%', #{keyword}, '%'))
+            </if>
+        </where>
+    </select>
+    
+    <select id="getAqiFeedbackById" resultType="com.neusoft.nepserver.entity.AqiFeedback">
+        SELECT af_id, tel_id, province, city, af_address, af_aqi, af_date, af_time, af_img, af_content, af_state, gm_id, assign_date, assign_time, admin_id
+        FROM aqi_feedback
+        WHERE af_id = #{afId}
+    </select>
+    
+    <update id="updateAqiFeedbackAssign" parameterType="com.neusoft.nepserver.entity.AqiFeedback">
+        UPDATE aqi_feedback
+        SET gm_id = #{gmId}, assign_date = #{assignDate}, assign_time = #{assignTime}, admin_id = #{adminId}, af_state = 1
+        WHERE af_id = #{afId}
+    </update>
+    
+    <select id="listAqiFeedbackByGmId" resultType="com.neusoft.nepserver.entity.AqiFeedback">
+        SELECT af_id, tel_id, province, city, af_address, af_aqi, af_date, af_time, af_img, af_content, af_state, gm_id, assign_date, assign_time, admin_id
+        FROM aqi_feedback
+        WHERE gm_id = #{gmId}
+        ORDER BY af_date DESC, af_time DESC
+    </select>
+    
+    <update id="updateAqiFeedbackState" parameterType="com.neusoft.nepserver.entity.AqiFeedback">
+        UPDATE aqi_feedback
+        SET af_state = #{afState}
+        WHERE af_id = #{afId}
+    </update>
+    
+</mapper>

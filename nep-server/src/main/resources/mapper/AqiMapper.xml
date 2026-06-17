@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neusoft.nepserver.mapper.AqiMapper">
+    
+    <select id="listAqiAll" resultType="com.neusoft.nepserver.entity.Aqi">
+        SELECT aqi_id, aqi_name, aqi_min, aqi_max, aqi_color, aqi_description
+        FROM aqi
+        ORDER BY aqi_id
+    </select>
+    
+</mapper>
