@@ -94,7 +94,8 @@ nep-system/
 ├── sql/
 │   └── nep_db.sql              # 数据库脚本
 ├── README.md
-└── .gitignore
+├── .gitignore
+└── application-template.yaml   # 数据库配置模板
 ```
 
 ## 快速开始
@@ -122,13 +123,15 @@ source sql/nep_db.sql
 # 进入后端目录
 cd nep-server
 
-# 修改数据库配置（application.yaml）
-# spring.datasource.username: 你的MySQL用户名
-# spring.datasource.password: "你的MySQL密码"
+# 复制配置模板并填入真实数据库信息
+cp src/main/resources/application-template.yaml src/main/resources/application.yaml
+# 编辑 application.yaml，修改 spring.datasource.username 和 password
 
 # 启动项目
 mvn spring-boot:run
 ```
+
+> **注意**：`application.yaml` 包含实际的数据库账号密码，已被 `.gitignore` 忽略，不会提交到 Git。首次使用请复制 `application-template.yaml` 为 `application.yaml` 并填入真实配置。
 
 后端服务地址：http://localhost:8080/nepm/
 
@@ -303,7 +306,8 @@ server {
 
 ### 1. MySQL连接失败
 - 检查MySQL服务是否启动
-- 确认application.yaml中的数据库配置
+- 确认 `src/main/resources/application.yaml` 中的数据库配置
+- 首次使用需复制 `application-template.yaml` 为 `application.yaml`
 - 密码如果是纯数字需要加引号：`password: "your_password"`
 
 ### 2. 前端依赖安装慢

@@ -31,3 +31,6 @@ Thumbs.db
 .env.*.local
 
 docs
+
+# Application config (actual)
+nep-server/src/main/resources/application.yaml
