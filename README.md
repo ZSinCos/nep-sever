@@ -77,7 +77,16 @@
 ## 项目结构
 
 ```
-nep-system/ (E:\shixi\qiandaun)
+nep-system/
+├── nep-server/                 # 后端服务
+│   └── src/main/java/
+│       └── com/neusoft/nepserver/
+│           ├── config/         # 配置类
+│           ├── controller/     # 控制器
+│           ├── dto/            # 数据传输对象
+│           ├── entity/         # 实体类
+│           ├── mapper/         # Mapper接口
+│           └── service/        # 服务层
 ├── neps-front/                 # 公众监督员端 (8081)
 ├── nepg-front/                 # 网格员端 (8083)
 ├── nepm-front/                 # 系统管理端 (8082)
@@ -86,19 +95,6 @@ nep-system/ (E:\shixi\qiandaun)
 │   └── nep_db.sql              # 数据库脚本
 ├── README.md
 └── .gitignore
-
-后端服务 (D:\IDEA\projects\nep-server)
-├── src/main/java/
-│   └── com/neusoft/nepserver/
-│       ├── config/             # 配置类
-│       ├── controller/         # 控制器
-│       ├── dto/                # 数据传输对象
-│       ├── entity/             # 实体类
-│       ├── mapper/             # Mapper接口
-│       └── service/            # 服务层
-└── src/main/resources/
-    ├── mapper/                 # MyBatis映射文件
-    └── application.yaml        # 配置文件
 ```
 
 ## 快速开始
@@ -308,7 +304,7 @@ server {
 ### 1. MySQL连接失败
 - 检查MySQL服务是否启动
 - 确认application.yaml中的数据库配置
-- 密码如果是纯数字需要加引号：`password: "050623"`
+- 密码如果是纯数字需要加引号：`password: "your_password"`
 
 ### 2. 前端依赖安装慢
 ```bash
