@@ -91,12 +91,44 @@ const provinceChange = async () => {
 };
 
 const register = async () => {
-  if (!supervisor.value.telId || !supervisor.value.supervisorName || !supervisor.value.supervisorPassword) {
-    alert('请填写完整信息');
+  if (!supervisor.value.telId) {
+    alert('请输入手机号码');
+    return;
+  }
+  if (!/^1[3-9]\d{9}$/.test(supervisor.value.telId)) {
+    alert('手机号码格式不正确');
+    return;
+  }
+  if (!supervisor.value.supervisorName) {
+    alert('请输入姓名');
+    return;
+  }
+  if (supervisor.value.supervisorName.length < 2 || supervisor.value.supervisorName.length > 20) {
+    alert('姓名长度应在2-20个字符之间');
+    return;
+  }
+  if (!supervisor.value.supervisorPassword) {
+    alert('请输入密码');
+    return;
+  }
+  if (supervisor.value.supervisorPassword.length < 6) {
+    alert('密码长度不能少于6位');
+    return;
+  }
+  if (!confirmPassword.value) {
+    alert('请再次输入密码');
     return;
   }
   if (supervisor.value.supervisorPassword !== confirmPassword.value) {
     alert('两次密码不一致');
+    return;
+  }
+  if (!supervisor.value.province) {
+    alert('请选择省');
+    return;
+  }
+  if (!supervisor.value.city) {
+    alert('请选择市');
     return;
   }
   if (!supervisor.value.province || !supervisor.value.city) {

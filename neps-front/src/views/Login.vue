@@ -37,8 +37,16 @@ const telId = ref('');
 const supervisorPassword = ref('');
 
 const login = async () => {
-  if (!telId.value || !supervisorPassword.value) {
-    alert('请输入手机号码和密码');
+  if (!telId.value) {
+    alert('请输入手机号码');
+    return;
+  }
+  if (!/^1[3-9]\d{9}$/.test(telId.value)) {
+    alert('手机号码格式不正确');
+    return;
+  }
+  if (!supervisorPassword.value) {
+    alert('请输入密码');
     return;
   }
   try {
