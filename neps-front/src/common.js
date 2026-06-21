@@ -35,3 +35,20 @@ export function getSessionStorage(keyStr) {
 export function removeSessionStorage(keyStr) {
     sessionStorage.removeItem(keyStr);
 }
+
+export function setLocalStorage(keyStr, value) {
+    localStorage.setItem(keyStr, JSON.stringify(value));
+}
+
+export function getLocalStorage(keyStr) {
+    var str = localStorage.getItem(keyStr);
+    if (str == '' || str == null || str == 'null' || str == undefined) {
+        return null;
+    } else {
+        return JSON.parse(str);
+    }
+}
+
+export function removeLocalStorage(keyStr) {
+    localStorage.removeItem(keyStr);
+}

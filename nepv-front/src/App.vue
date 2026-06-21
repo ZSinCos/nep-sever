@@ -2,6 +2,14 @@
   <router-view/>
 </template>
 
+<script setup>
+import { provide } from 'vue';
+import axios from 'axios';
+
+axios.defaults.baseURL = 'http://localhost:8080/nepm/';
+provide('axios', axios);
+</script>
+
 <style>
 html, body, div, span, h1, h2, h3, h4, h5, h6, ul, ol, li, p {
   margin: 0;

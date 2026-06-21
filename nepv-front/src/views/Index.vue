@@ -26,7 +26,7 @@
       <div class="center">
         <div class="chart-card" style="height: 100%;">
           <div class="card-title">各省AQI超标累计统计</div>
-          <div ref="barChart" style="width: 100%; height: calc(100% - 40px);"></div>
+          <div ref="mapChart" style="width: 100%; height: calc(100% - 40px);"></div>
         </div>
       </div>
       <div class="right">
@@ -44,11 +44,13 @@
 </template>
 
 <script setup>
-import { ref, onMounted, nextTick, computed } from 'vue';
-import axios from 'axios';
+import { ref, onMounted, nextTick, computed, inject } from 'vue';
 import * as echarts from 'echarts';
+import chinaJson from '@/assets/china.js';
 
-axios.defaults.baseURL = 'http://localhost:8080/nepm/';
+const axios = inject('axios');
+
+echarts.registerMap('china', chinaJson);
 
 const curDate = new Date().toLocaleDateString();
 const aqiCount = ref(0);
@@ -60,7 +62,7 @@ const goodRate = computed(() => {
 });
 
 const pieChart = ref(null);
-const barChart = ref(null);
+const mapChart = ref(null);
 const lineChart = ref(null);
 const rankChart = ref(null);
 
@@ -74,7 +76,7 @@ onMounted(async () => {
     
     await nextTick();
     loadPieChart();
-    loadBarChart();
+    loadMapChart();
     loadLineChart();
     loadRankChart();
   } catch (error) {
@@ -85,6 +87,11 @@ onMounted(async () => {
 const loadPieChart = async () => {
   const res = await axios.get('/statistics/listAqiDistributeTotalStatis');
   const data = res.data.data || [];
+  const aqiColors = {
+    '优': '#00E400', '良': '#FFFF00',
+    '轻度污染': '#FF7E00', '中度污染': '#FF0000',
+    '重度污染': '#99004C', '严重污染': '#7E0023'
+  };
   const chart = echarts.init(pieChart.value);
   chart.setOption({
     tooltip: { trigger: 'item' },
@@ -92,27 +99,58 @@ const loadPieChart = async () => {
       type: 'pie',
       radius: ['40%', '70%'],
       data: data.map(item => ({ name: item.aqiName, value: item.count })),
-      label: { color: '#fff' }
+      label: { color: '#fff' },
+      itemStyle: {
+        color: (params) => aqiColors[params.name] || null
+      }
     }]
   });
 };
 
-const loadBarChart = async () => {
+const loadMapChart = async () => {
   const res = await axios.get('/statistics/listProvinceItemTotalStatis');
   const data = res.data.data || [];
-  const chart = echarts.init(barChart.value);
+  const chart = echarts.init(mapChart.value);
   chart.setOption({
-    tooltip: { trigger: 'axis' },
-    grid: { left: '3%', right: '4%', bottom: '10%', containLabel: true },
-    xAxis: { 
-      type: 'category', 
-      data: data.map(item => item.provinceName), 
-      axisLabel: { color: '#fff', rotate: 45, interval: 0 } 
+    tooltip: { 
+      trigger: 'item',
+      formatter: (params) => {
+        if (params.value !== undefined) {
+          return params.name + '<br/>超标次数：' + params.value;
+        }
+        return params.name + '<br/>超标次数：0';
+      }
     },
-    yAxis: { type: 'value', axisLabel: { color: '#fff' } },
-    series: [
-      { name: '超标次数', type: 'bar', data: data.map(item => item.exceedCount), itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: '#FF7E00' }, { offset: 1, color: '#FF0000' }]) } }
-    ]
+    visualMap: {
+      min: 0,
+      max: Math.max(...data.map(item => item.exceedCount), 1),
+      left: 'left',
+      bottom: '5%',
+      text: ['高', '低'],
+      textStyle: { color: '#fff' },
+      inRange: {
+        color: ['#67C23A', '#E6A23C', '#FF7E00', '#FF0000', '#99004C']
+      }
+    },
+    series: [{
+      type: 'map',
+      map: 'china',
+      roam: false,
+      label: { show: true, color: '#fff', fontSize: 10 },
+      itemStyle: {
+        areaColor: '#1a3a5c',
+        borderColor: '#409EFF',
+        borderWidth: 1
+      },
+      emphasis: {
+        label: { color: '#fff', fontSize: 12 },
+        itemStyle: { areaColor: '#409EFF' }
+      },
+      data: data.map(item => ({
+        name: item.provinceName,
+        value: item.exceedCount
+      }))
+    }]
   });
   window.addEventListener('resize', () => chart.resize());
 };

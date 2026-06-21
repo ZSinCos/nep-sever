@@ -39,8 +39,27 @@ const form = ref({ gmId: '' });
 
 onMounted(async () => {
   feedback.value = getSessionStorage('selectedFeedback') || {};
+  let provinceId = feedback.value.provinceId || '';
+  let cityId = feedback.value.cityId || '';
+  // 如果 feedback 没有 ID 只有名称，则根据名称查找 ID
+  if (!provinceId && feedback.value.province) {
+    const pRes = await axios.get('/gridProvince/listGridProvinceAll');
+    const provinces = pRes.data.data || [];
+    const foundP = provinces.find(p => p.provinceName === feedback.value.province);
+    if (foundP) {
+      provinceId = foundP.provinceId;
+      if (!cityId && feedback.value.city) {
+        const cRes = await axios.get('/gridCity/listGridCityByProvinceId', {
+          params: { provinceId }
+        });
+        const cities = cRes.data.data || [];
+        const foundC = cities.find(c => c.cityName === feedback.value.city);
+        if (foundC) cityId = foundC.cityId;
+      }
+    }
+  }
   const res = await axios.get('/gridMember/listGridMemberByProvinceId', {
-    params: { provinceId: '', cityId: '' }
+    params: { provinceId, cityId }
   });
   gridMemberList.value = res.data.data || [];
 });

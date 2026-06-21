@@ -99,6 +99,20 @@ const register = async () => {
     alert('两次密码不一致');
     return;
   }
+  if (!supervisor.value.province || !supervisor.value.city) {
+    alert('请选择省和市');
+    return;
+  }
+  // 验证手机号是否已注册
+  try {
+    const checkRes = await axios.get('/supervisor/getSupervisorById/' + supervisor.value.telId);
+    if (checkRes.data.code === 200 && checkRes.data.data) {
+      alert('该手机号码已被注册，请直接登录');
+      return;
+    }
+  } catch (e) {
+    // 查不到表示未注册，继续注册流程
+  }
   supervisor.value.registerDate = getCurDate();
   try {
     const res = await axios.post('/supervisor/saveSupervisor', supervisor.value);
