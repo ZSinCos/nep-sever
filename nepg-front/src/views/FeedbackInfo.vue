@@ -3,14 +3,14 @@
     <div class="header-box">
       <header>
         <i class="fa fa-arrow-left" @click="goBack"></i>
-        <span style="font-size: 5vw; font-weight: bold;">反馈详情</span>
+        <span class="view-text-lg">反馈详情</span>
         <i class="fa fa-sign-out" @click="logout"></i>
       </header>
       <div class="top-ban"></div>
     </div>
-    <div style="width: 86vw; margin: 0 auto; margin-top: 5vw;">
-      <div style="background-color: #FFF; padding: 4vw; border-radius: 2vw; margin-bottom: 3vw;">
-        <div style="font-weight: bold; margin-bottom: 3vw;">反馈信息</div>
+    <div class="view-container">
+      <div class="view-card">
+        <div class="view-card-title">反馈信息</div>
         <table class="table-form" style="margin: 0;">
           <tr>
             <td>区域</td>
@@ -34,7 +34,7 @@
           </tr>
         </table>
       </div>
-      <div v-if="feedback.afState === 1" style="background-color: #FFF; padding: 4vw; border-radius: 2vw; margin-bottom: 3vw;">
+      <div v-if="feedback.afState === 1" class="view-card">
         <div style="font-weight: bold; margin-bottom: 3vw;">确认AQI数据</div>
         <table class="table-form" style="margin: 0;">
           <tr>
@@ -71,14 +71,14 @@
           </tr>
           <tr>
             <td>备注</td>
-            <td><textarea v-model="statistics.staRemark" placeholder="备注" style="width: 100%; height: 15vw;"></textarea></td>
+            <td><textarea v-model="statistics.staRemark" placeholder="备注" style="width: 100%; height: 60px; max-height: 15vw;"></textarea></td>
           </tr>
         </table>
         <div class="btn" @click="submitStatistics">提交确认数据</div>
       </div>
-      <div v-if="feedback.afState === 2" style="background-color: #FFF; padding: 4vw; border-radius: 2vw; margin-bottom: 3vw;">
-        <div style="font-weight: bold; margin-bottom: 3vw;">已确认数据</div>
-        <div style="color: #00E400; text-align: center; padding: 5vw;">已完成确认</div>
+      <div v-if="feedback.afState === 2" class="view-card">
+        <div class="view-card-title">已确认数据</div>
+        <div style="color: #00E400; text-align: center; padding: 20px;">已完成确认</div>
       </div>
     </div>
   </div>

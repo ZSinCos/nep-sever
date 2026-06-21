@@ -3,7 +3,7 @@
     <div class="header-box">
       <header>
         <i class="fa fa-arrow-left" @click="goBack"></i>
-        <span style="font-size: 5vw; font-weight: bold;">公众监督员注册</span>
+        <span class="view-text-lg">公众监督员注册</span>
         <i class="fa fa-bars"></i>
       </header>
       <div class="top-ban"></div>
@@ -44,7 +44,7 @@
         </td>
       </tr>
     </table>
-    <div style="width: 86vw; margin: 0 auto;">
+    <div class="view-container" style="margin-top: 0;">
       <div class="btn" @click="register">注 册</div>
     </div>
   </div>

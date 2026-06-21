@@ -209,9 +209,11 @@ const loadRankChart = async () => {
   color: #fff;
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
 }
 .header {
   height: 60px;
+  min-height: 60px;
   background: rgba(0, 0, 0, 0.3);
   display: flex;
   align-items: center;
@@ -264,5 +266,41 @@ const loadRankChart = async () => {
   border-radius: 8px;
   padding: 15px;
   flex: 1;
+  min-height: 250px;
+}
+
+/* ===== 移动端适配 ===== */
+@media (max-width: 768px) {
+  .dashboard {
+    height: auto;
+    min-height: 100%;
+  }
+  .header {
+    height: auto;
+    min-height: 50px;
+    flex-direction: column;
+    gap: 4px;
+    padding: 8px 12px;
+  }
+  .header h1 {
+    font-size: 16px;
+  }
+  .header-right {
+    font-size: 12px;
+  }
+  .content {
+    flex-direction: column;
+    padding: 6px;
+    gap: 6px;
+  }
+  .left, .right, .center {
+    width: 100%;
+  }
+  .card-value {
+    font-size: 28px;
+  }
+  .chart-card {
+    min-height: 220px;
+  }
 }
 </style>

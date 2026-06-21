@@ -104,4 +104,39 @@ footer img{
     font-weight: 500;
     user-select: none;
 }
+
+/* ===== 视图通用类 ===== */
+.view-container { width: 86vw; margin: 0 auto; margin-top: 5vw; }
+.view-card { background-color: #FFF; padding: 4vw; border-radius: 2vw; margin-bottom: 3vw; }
+.view-card-title { font-weight: bold; margin-bottom: 3vw; }
+.view-text-lg { font-size: 5vw; font-weight: bold; }
+.view-text-md { font-size: 3.5vw; }
+.view-text-sm { font-size: 3vw; }
+.view-empty { text-align: center; color: #999; padding: 10vw; }
+.view-flex-between { display: flex; justify-content: space-between; align-items: center; }
+.view-mb-2 { margin-bottom: 2vw; }
+
+/* ===== 桌面端适配 ===== */
+@media (min-width: 768px) {
+  body { background: #d0d0d0; }
+  #app { max-width: 450px; margin: 0 auto; box-shadow: 0 0 30px rgba(0,0,0,0.15); overflow: hidden; }
+  .wrapper { border-radius: 0; }
+  .header-box header { max-width: 450px; left: 50%; transform: translateX(-50%); height: 60px; padding: 0 16px; }
+  .header-box .top-ban { height: 60px; }
+  .header-box i { font-size: 24px; }
+  .header-box .fa { font-size: 24px; }
+  footer { max-width: 450px; left: 50%; transform: translateX(-50%); }
+  footer img { height: auto; }
+  .table-form { width: 400px; margin-top: 20px; font-size: 16px; }
+  .table-form tr td { height: 48px; }
+  .btn { height: 48px; margin-top: 20px; border-radius: 8px; font-size: 18px; line-height: 48px; letter-spacing: 4px; }
+  .view-container { width: 400px; margin-top: 20px; }
+  .view-card { padding: 16px; border-radius: 8px; margin-bottom: 12px; }
+  .view-card-title { margin-bottom: 12px; }
+  .view-text-lg { font-size: 20px; }
+  .view-text-md { font-size: 14px; }
+  .view-text-sm { font-size: 12px; }
+  .view-empty { padding: 40px; }
+  .view-mb-2 { margin-bottom: 8px; }
+}
 </style>

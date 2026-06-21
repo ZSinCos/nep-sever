@@ -3,24 +3,24 @@
     <div class="header-box">
       <header>
         <i class="fa fa-arrow-left" @click="goBack"></i>
-        <span style="font-size: 5vw; font-weight: bold;">反馈列表</span>
+        <span class="view-text-lg">反馈列表</span>
         <i class="fa fa-sign-out" @click="logout"></i>
       </header>
       <div class="top-ban"></div>
     </div>
-    <div style="width: 86vw; margin: 0 auto; margin-top: 5vw;">
-      <div v-if="feedbackList.length === 0" style="text-align: center; color: #999; padding: 10vw;">
+    <div class="view-container">
+      <div v-if="feedbackList.length === 0" class="view-empty">
         暂无指派的反馈
       </div>
       <div v-for="item in feedbackList" :key="item.afId" 
-           style="background-color: #FFF; padding: 4vw; border-radius: 2vw; margin-bottom: 3vw; cursor: pointer;"
+           class="view-card" style="cursor: pointer;"
            @click="goDetail(item)">
-        <div style="display: flex; justify-content: space-between; margin-bottom: 2vw;">
+        <div class="view-flex-between view-mb-2">
           <span style="font-weight: bold;">{{ item.province }} {{ item.city }}</span>
           <span :style="{color: getStateColor(item.afState)}">{{ getStateText(item.afState) }}</span>
         </div>
-        <div style="color: #666; font-size: 3.5vw; margin-bottom: 2vw;">{{ item.afAddress }}</div>
-        <div style="color: #999; font-size: 3vw;">
+        <div style="color: #666;" class="view-text-md view-mb-2">{{ item.afAddress }}</div>
+        <div style="color: #999;" class="view-text-sm">
           {{ item.afDate }} {{ item.afTime }}
         </div>
       </div>

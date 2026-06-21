@@ -3,14 +3,14 @@
     <div class="header-box">
       <header>
         <i class="fa fa-arrow-left" @click="goBack"></i>
-        <span style="font-size: 5vw; font-weight: bold;">网格分配</span>
+        <span class="view-text-lg">网格分配</span>
         <i class="fa fa-sign-out" @click="logout"></i>
       </header>
       <div class="top-ban"></div>
     </div>
-    <div style="width: 86vw; margin: 0 auto; margin-top: 5vw;">
-      <div style="background-color: #FFF; padding: 4vw; border-radius: 2vw; margin-bottom: 3vw;">
-        <div style="font-weight: bold; margin-bottom: 3vw;">选择监测区域</div>
+    <div class="view-container">
+      <div class="view-card">
+        <div class="view-card-title">选择监测区域</div>
         <table class="table-form" style="margin: 0;">
           <tr>
             <td>省</td>
@@ -32,18 +32,18 @@
           </tr>
         </table>
       </div>
-      <div style="background-color: #FFF; padding: 4vw; border-radius: 2vw;">
-        <div style="font-weight: bold; margin-bottom: 3vw;">可选网格员</div>
-        <div v-if="gridMemberList.length === 0" style="color: #999; text-align: center; padding: 5vw;">
+      <div class="view-card">
+        <div class="view-card-title">可选网格员</div>
+        <div v-if="gridMemberList.length === 0" class="view-empty">
           暂无可选网格员
         </div>
         <div v-for="item in gridMemberList" :key="item.gmId" 
-             style="padding: 3vw; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;">
+             class="view-flex-between" style="padding: 3vw; border-bottom: 1px solid #eee;">
           <div>
             <div style="font-weight: bold;">{{ item.gmName }}</div>
             <div style="color: #999; font-size: 3.5vw;">{{ item.gmTel }}</div>
           </div>
-          <div class="btn" style="width: 20vw; height: 8vw; line-height: 8vw; font-size: 3.5vw; margin: 0;" 
+          <div class="btn" style="width: 80px; height: 32px; line-height: 32px; font-size: 14px; margin: 0;" 
                @click="selectGridMember(item)">选择</div>
         </div>
       </div>

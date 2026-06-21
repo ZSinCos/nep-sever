@@ -3,23 +3,23 @@
     <div class="header-box">
       <header>
         <i class="fa fa-arrow-left" @click="goBack"></i>
-        <span style="font-size: 5vw; font-weight: bold;">预估AQI</span>
+        <span class="view-text-lg">预估AQI</span>
         <i class="fa fa-sign-out" @click="logout"></i>
       </header>
       <div class="top-ban"></div>
     </div>
-    <div style="width: 86vw; margin: 0 auto; margin-top: 5vw;">
-      <div style="background-color: #FFF; padding: 4vw; border-radius: 2vw; margin-bottom: 3vw;">
-        <div style="font-weight: bold; margin-bottom: 3vw;">选择AQI级别</div>
-        <div v-for="item in aqiList" :key="item.aqiId" 
+    <div class="view-container">
+      <div class="view-card">
+        <div class="view-card-title">选择AQI级别</div>
+        <div v-for="item in aqiList" :key="item.aqiId"
              :style="{background: item.aqiColor, margin: '2vw 0', padding: '3vw', borderRadius: '2vw', cursor: 'pointer', opacity: selectedAqi === item ? 1 : 0.6}"
              @click="selectedAqi = item">
           <div style="font-weight: bold; color: #FFF;">{{ item.aqiName }} ({{ item.aqiMin }}-{{ item.aqiMax }})</div>
           <div style="color: #FFF; font-size: 3.5vw;">{{ item.aqiDescription }}</div>
         </div>
       </div>
-      <div style="background-color: #FFF; padding: 4vw; border-radius: 2vw; margin-bottom: 3vw;">
-        <div style="font-weight: bold; margin-bottom: 3vw;">反馈信息</div>
+      <div class="view-card">
+        <div class="view-card-title">反馈信息</div>
         <table class="table-form" style="margin: 0;">
           <tr>
             <td>详细地址</td>
@@ -27,7 +27,7 @@
           </tr>
           <tr>
             <td>反馈内容</td>
-            <td><textarea v-model="feedback.afContent" placeholder="请输入反馈内容" style="width: 100%; height: 20vw;"></textarea></td>
+            <td><textarea v-model="feedback.afContent" placeholder="请输入反馈内容" style="width: 100%; height: 80px; max-height: 20vw;"></textarea></td>
           </tr>
         </table>
       </div>

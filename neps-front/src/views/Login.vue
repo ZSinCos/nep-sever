@@ -3,7 +3,7 @@
     <div class="header-box">
       <header>
         <img src="../assets/logo.png" style="width: 50px;">
-        <span style="font-size: 5vw; font-weight: bold;">公众监督员登录</span>
+        <span class="view-text-lg">公众监督员登录</span>
         <i class="fa fa-bars"></i>
       </header>
       <div class="top-ban"></div>
@@ -18,7 +18,7 @@
         <td><input type="password" v-model="supervisorPassword" placeholder="请输入密码"></td>
       </tr>
     </table>
-    <div style="width: 86vw; margin: 0 auto;">
+    <div class="view-container" style="margin-top: 0;">
       <div class="btn" @click="login">登 录</div>
       <div class="btn" style="background-color: #999;" @click="goRegister">注 册</div>
     </div>

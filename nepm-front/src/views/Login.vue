@@ -62,9 +62,12 @@ const login = async () => {
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 20px;
+  box-sizing: border-box;
 }
 .login-box {
   width: 400px;
+  max-width: 100%;
   padding: 40px;
   background: #fff;
   border-radius: 10px;
@@ -79,5 +82,13 @@ const login = async () => {
   color: #666;
   font-weight: normal;
   margin-bottom: 20px;
+}
+@media (max-width: 768px) {
+  .login-box {
+    padding: 24px 16px;
+  }
+  .login-box h2 {
+    font-size: 18px;
+  }
 }
 </style>
