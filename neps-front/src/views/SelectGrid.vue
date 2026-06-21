@@ -110,7 +110,7 @@ const submitAddress = () => {
 
   sessionStorage.setItem('selectedProvince', JSON.stringify(province));
   sessionStorage.setItem('selectedCity', JSON.stringify(city));
-  sessionStorage.setItem('selectedAddress', selectedAddress.value.trim());
+  sessionStorage.setItem('selectedAddress', JSON.stringify(selectedAddress.value.trim()));
   router.push('/selectAqi');
 };
 </script>
