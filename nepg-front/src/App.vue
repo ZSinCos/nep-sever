@@ -107,6 +107,17 @@ a{
     background-color: #5a9aaa;
 }
 
+/* ===== 视图通用类 ===== */
+.view-container { width: 86%; margin: 0 auto; margin-top: 20px; }
+.view-card { background-color: #FFF; padding: 16px; border-radius: 8px; margin-bottom: 12px; }
+.view-card-title { font-weight: bold; margin-bottom: 12px; }
+.view-text-lg { font-size: 18px; font-weight: bold; }
+.view-text-md { font-size: 14px; }
+.view-text-sm { font-size: 12px; }
+.view-empty { text-align: center; color: #999; padding: 40px; }
+.view-flex-between { display: flex; justify-content: space-between; align-items: center; }
+.view-mb-2 { margin-bottom: 8px; }
+
 /* 移动端适配 */
 @media (max-width: 767px) {
   .wrapper{
