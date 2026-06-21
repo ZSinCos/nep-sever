@@ -5,9 +5,67 @@
 <script setup>
 import axios from 'axios';
 import { provide } from 'vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 axios.defaults.baseURL = 'http://localhost:8080/nepm/';
-provide('axios',axios);
+
+// 请求拦截器
+axios.interceptors.request.use(
+  config => {
+    return config;
+  },
+  error => {
+    return Promise.reject(error);
+  }
+);
+
+// 响应拦截器
+axios.interceptors.response.use(
+  response => {
+    const res = response.data;
+    // 如果返回的 code 不是 200，统一处理为错误
+    if (res.code && res.code !== 200) {
+      alert(res.message || '请求失败');
+      return Promise.reject(new Error(res.message || '请求失败'));
+    }
+    return response;
+  },
+  error => {
+    // HTTP 错误状态码处理
+    if (error.response) {
+      const status = error.response.status;
+      switch (status) {
+        case 401:
+          alert('未登录或登录已过期，请重新登录');
+          sessionStorage.clear();
+          router.push('/login');
+          break;
+        case 403:
+          alert('没有权限访问');
+          break;
+        case 404:
+          alert('请求的资源不存在');
+          break;
+        case 500:
+          alert('服务器内部错误');
+          break;
+        default:
+          alert(`请求失败：${status}`);
+      }
+    } else if (error.message.includes('timeout')) {
+      alert('请求超时，请稍后重试');
+    } else if (error.message.includes('Network Error')) {
+      alert('网络错误，请检查网络连接');
+    } else {
+      alert('请求失败，请重试');
+    }
+    return Promise.reject(error);
+  }
+);
+
+provide('axios', axios);
 </script>
 
 <style>
