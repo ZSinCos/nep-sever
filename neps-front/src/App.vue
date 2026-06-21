@@ -29,7 +29,7 @@ a{
 .wrapper{
     width: 100%;
     height: 100%;
-    background-color: #CFE8E9;
+    background-color: #DEEEF0;
 }
 .header-box{
     width: 100%;
@@ -69,28 +69,37 @@ a{
 .table-form tr td{
     height: 12vw;
 }
-.table-form input,.table-form select,.table-form textarea{
-    background-color: #CFE8E9;
-    border: none;
-    outline: none;
+.table-form input {
+  width: 100%;
+  height: 8vw;
+  min-height: 36px;
+  box-sizing: border-box;
+  background-color: #FAFAFA;
+  border: 2px solid #e7e7e7;
+  border-radius: 8px;
+  padding: 0 12px;
+  font-size: 15px;
+  outline: none;
 }
 .table-form tr td:first-child{
     color: #777;
     font-weight: 700;
 }
 .btn{
-    width: 100%;
-    height: 12vw;
-    background-color: #70B0BC;
-    margin-top: 5vw;
-    border-radius: 2vw;
-    color: #FFF;
-    font-size: 5vw;
-    text-align: center;
-    line-height: 12vw;
-    letter-spacing: 1vw;
-    font-weight: 500;
-    user-select: none;
+  width: 100%;
+  height: 54px;
+  border: none;
+  border-radius: 12px;
+  background: #74bfd0;
+  color: #fff;
+  font-size: 20px;
+  font-weight: bold;
+  letter-spacing: 4px;
+  cursor: pointer;
+  margin: 10px 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* ===== 视图通用类 ===== */

@@ -1,14 +1,12 @@
 <template>
   <div class="wrapper">
-    <div class="header-box">
-      <header>
-        <i class="fa fa-arrow-left" @click="goBack"></i>
-        <span class="view-text-lg">历史反馈列表</span>
-        <i class="fa fa-sign-out" @click="logout"></i>
-      </header>
-      <div class="top-ban"></div>
-    </div>
-    <div class="view-container">
+    <HeaderBox title="历史反馈列表" :showLogout="true" />
+    <HeroBanner
+        bgImage="../assets/login-banner.png"
+        slogan="../assets/register-slogan.png"
+        sloganAlt="保护环境人人有责"
+    />
+    <div class="scroll-container">
       <div v-if="feedbackList.length === 0" class="view-empty">
         暂无反馈记录
       </div>
@@ -30,6 +28,8 @@
 import { ref, inject, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { getSessionStorage, removeSessionStorage } from '../common';
+import HeroBanner from "@/components/HeroBanner.vue";
+import HeaderBox from "@/components/HeaderBox.vue";
 
 const axios = inject('axios');
 const router = useRouter();
@@ -56,9 +56,27 @@ const getStateColor = (state) => {
   return map[state] || '#999';
 };
 
-const goBack = () => router.back();
-const logout = () => {
-  removeSessionStorage('supervisor');
-  router.push('/login');
-};
 </script>
+
+<style scoped>
+.wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.scroll-container {
+  width: 86vw;
+  margin: 0 auto;
+  margin-top: 5vw;
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (min-width: 768px) {
+  .scroll-container {
+    width: 400px;
+    margin-top: 20px;
+  }
+}
+</style>
