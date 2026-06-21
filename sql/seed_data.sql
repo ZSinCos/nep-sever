@@ -7,12 +7,12 @@ INSERT INTO admins (admin_id, admin_name, admin_password) VALUES ('admin', 'Admi
 
 -- AQI级别
 INSERT INTO aqi (aqi_id, aqi_name, aqi_min, aqi_max, aqi_color, aqi_description) VALUES
-(1, 'Good', 0, 50, '#00E400', 'Air quality is satisfactory'),
-(2, 'Moderate', 51, 100, '#FFFF00', 'Acceptable air quality'),
-(3, 'Unhealthy-SG', 101, 150, '#FF7E00', 'Sensitive groups may experience effects'),
-(4, 'Unhealthy', 151, 200, '#FF0000', 'Everyone may experience effects'),
-(5, 'Very Unhealthy', 201, 300, '#99004C', 'Health alert'),
-(6, 'Hazardous', 301, 500, '#7E0023', 'Health warning');
+(1, '优', 0, 50, '#00E400', '空气质量令人满意，基本无空气污染'),
+(2, '良', 51, 100, '#CCCC00', '空气质量可接受，但某些污染物可能对极少数异常敏感人群健康有较弱影响'),
+(3, '轻度污染', 101, 150, '#FF7E00', '易感人群症状有轻度加剧，健康人群出现刺激症状'),
+(4, '中度污染', 151, 200, '#FF0000', '进一步加剧易感人群症状，可能对健康人群心脏、呼吸系统有影响'),
+(5, '重度污染', 201, 300, '#99004C', '心脏病和肺病患者症状显著加剧，运动耐受力降低，健康人群普遍出现症状'),
+(6, '严重污染', 301, 500, '#7E0023', '健康人群运动耐受力降低，有明显强烈症状，提前出现某些疾病');
 
 -- 省份
 INSERT INTO grid_province (province_id, province_name) VALUES

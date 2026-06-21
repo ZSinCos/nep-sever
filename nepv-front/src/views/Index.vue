@@ -19,14 +19,44 @@
           <div class="card-value" style="color: #E6A23C;">{{ goodRate }}%</div>
         </div>
         <div class="chart-card">
-          <div class="card-title">AQI等级分布</div>
-          <div ref="pieChart" style="width: 100%; height: 250px;"></div>
+          <div class="card-title">空气质量指数级别分布</div>
+          <div ref="pieChart" style="width: 100%; height: 210px;"></div>
+        </div>
+        <div class="chart-card">
+          <div class="card-title">12个月内空气质量超标趋势</div>
+          <div ref="leftLineChart" style="width: 100%; height: 210px;"></div>
         </div>
       </div>
       <div class="center">
-        <div class="chart-card" style="height: 100%;">
+        <div class="chart-card map-card">
           <div class="card-title">各省AQI超标累计统计</div>
           <div ref="mapChart" style="width: 100%; height: calc(100% - 40px);"></div>
+        </div>
+        <div class="kpi-section">
+          <div class="kpi-title">空气质量检测实时统计</div>
+          <div class="kpi-cards">
+            <div class="kpi-card">
+              <i class="fa fa-users kpi-icon"></i>
+              <div class="kpi-info">
+                <div class="kpi-label">检测总数量</div>
+                <div class="kpi-value">{{ aqiCount }}</div>
+              </div>
+            </div>
+            <div class="kpi-card">
+              <i class="fa fa-sun-o kpi-icon"></i>
+              <div class="kpi-info">
+                <div class="kpi-label">良好数量</div>
+                <div class="kpi-value">{{ aqiGoodCount }}</div>
+              </div>
+            </div>
+            <div class="kpi-card">
+              <i class="fa fa-shield kpi-icon"></i>
+              <div class="kpi-info">
+                <div class="kpi-label">污染数量</div>
+                <div class="kpi-value">{{ aqiPollutionCount }}</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div class="right">
@@ -55,6 +85,7 @@ echarts.registerMap('china', chinaJson);
 const curDate = new Date().toLocaleDateString();
 const aqiCount = ref(0);
 const aqiGoodCount = ref(0);
+const aqiPollutionCount = computed(() => aqiCount.value - aqiGoodCount.value);
 
 const goodRate = computed(() => {
   if (aqiCount.value === 0) return 0;
@@ -64,19 +95,21 @@ const goodRate = computed(() => {
 const pieChart = ref(null);
 const mapChart = ref(null);
 const lineChart = ref(null);
+const leftLineChart = ref(null);
 const rankChart = ref(null);
 
 onMounted(async () => {
   try {
     const res1 = await axios.get('/statistics/getAqiCount');
     aqiCount.value = res1.data.data || 0;
-    
+
     const res2 = await axios.get('/statistics/getAqiGoodCount');
     aqiGoodCount.value = res2.data.data || 0;
-    
+
     await nextTick();
     loadPieChart();
     loadMapChart();
+    loadLeftLineChart();
     loadLineChart();
     loadRankChart();
   } catch (error) {
@@ -84,27 +117,45 @@ onMounted(async () => {
   }
 });
 
+const aqiColors = {
+  1: '#2E3A87',
+  2: '#4CAF50',
+  3: '#FFC107',
+  4: '#E040FB',
+  5: '#2196F3',
+  6: '#00BCD4'
+};
+
 const loadPieChart = async () => {
   const res = await axios.get('/statistics/listAqiDistributeTotalStatis');
   const data = res.data.data || [];
-  const aqiColors = {
-    '优': '#00E400', '良': '#FFFF00',
-    '轻度污染': '#FF7E00', '中度污染': '#FF0000',
-    '重度污染': '#99004C', '严重污染': '#7E0023'
-  };
   const chart = echarts.init(pieChart.value);
   chart.setOption({
     tooltip: { trigger: 'item' },
+    legend: {
+      orient: 'horizontal',
+      bottom: 0,
+      textStyle: { color: '#ccc', fontSize: 10 }
+    },
     series: [{
       type: 'pie',
-      radius: ['40%', '70%'],
-      data: data.map(item => ({ name: item.aqiName, value: item.count })),
-      label: { color: '#fff' },
+      radius: ['45%', '70%'],
+      center: ['50%', '43%'],
+      avoidLabelOverlap: false,
+      label: { show: false },
+      emphasis: {
+        label: { show: true, fontSize: 13, fontWeight: 'bold', color: '#fff' }
+      },
+      data: data.map(item => ({
+        name: item.aqiName,
+        value: item.count
+      })),
       itemStyle: {
-        color: (params) => aqiColors[params.name] || null
+        color: (params) => aqiColors[params.dataIndex + 1] || '#999'
       }
     }]
   });
+  window.addEventListener('resize', () => chart.resize());
 };
 
 const loadMapChart = async () => {
@@ -112,7 +163,7 @@ const loadMapChart = async () => {
   const data = res.data.data || [];
   const chart = echarts.init(mapChart.value);
   chart.setOption({
-    tooltip: { 
+    tooltip: {
       trigger: 'item',
       formatter: (params) => {
         if (params.value !== undefined) {
@@ -155,6 +206,48 @@ const loadMapChart = async () => {
   window.addEventListener('resize', () => chart.resize());
 };
 
+const loadLeftLineChart = async () => {
+  const res = await axios.get('/statistics/listAqiTrendTotalStatis');
+  const data = res.data.data || [];
+  const chart = echarts.init(leftLineChart.value);
+  chart.setOption({
+    tooltip: { trigger: 'axis' },
+    grid: { left: '3%', right: '4%', top: '8%', bottom: '3%', containLabel: true },
+    xAxis: {
+      type: 'category',
+      data: data.map(item => {
+        const parts = item.month.split('-');
+        return parts.length === 2 ? parts[1] : item.month;
+      }),
+      axisLabel: { color: '#fff', fontSize: 10 },
+      axisLine: { lineStyle: { color: '#fff' } }
+    },
+    yAxis: {
+      type: 'value',
+      axisLabel: { color: '#fff', fontSize: 10 },
+      splitLine: { lineStyle: { color: 'rgba(255,255,255,0.1)' } }
+    },
+    series: [{
+      name: '超标次数',
+      type: 'line',
+      data: data.map(item => item.count),
+      smooth: true,
+      symbol: 'circle',
+      symbolSize: 5,
+      areaStyle: {
+        opacity: 0.2,
+        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+          { offset: 0, color: '#2196F3' },
+          { offset: 1, color: 'rgba(33,150,243,0)' }
+        ])
+      },
+      lineStyle: { color: '#2196F3', width: 2 },
+      itemStyle: { color: '#2196F3' }
+    }]
+  });
+  window.addEventListener('resize', () => chart.resize());
+};
+
 const loadLineChart = async () => {
   const res = await axios.get('/statistics/listAqiTrendTotalStatis');
   const data = res.data.data || [];
@@ -185,10 +278,10 @@ const loadRankChart = async () => {
     tooltip: { trigger: 'axis' },
     grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
     xAxis: { type: 'value', axisLabel: { color: '#fff' } },
-    yAxis: { 
-      type: 'category', 
-      data: data.map(item => item.provinceName).reverse(), 
-      axisLabel: { color: '#fff' } 
+    yAxis: {
+      type: 'category',
+      data: data.map(item => item.provinceName).reverse(),
+      axisLabel: { color: '#fff' }
     },
     series: [{
       name: '超标次数',
@@ -233,43 +326,93 @@ const loadRankChart = async () => {
   flex: 1;
   display: flex;
   padding: 10px;
-  gap: 10px;
+  gap: 8px;
 }
 .left, .right {
   width: 25%;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
 }
 .center {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 .card {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
-  padding: 15px;
+  padding: 12px;
   text-align: center;
 }
 .card-title {
   font-size: 14px;
   color: #999;
-  margin-bottom: 10px;
+  margin-bottom: 6px;
 }
 .card-value {
-  font-size: 36px;
+  font-size: 32px;
   font-weight: bold;
 }
 .chart-card {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
-  padding: 15px;
+  padding: 12px;
   flex: 1;
-  min-height: 250px;
+  min-height: 200px;
+}
+.map-card {
+  flex: 1;
+  min-height: 340px;
 }
 
-/* ===== 移动端适配 ===== */
+.kpi-section {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 15px;
+}
+.kpi-title {
+  font-size: 14px;
+  color: #999;
+  margin-bottom: 12px;
+}
+.kpi-cards {
+  display: flex;
+  gap: 15px;
+}
+.kpi-card {
+  flex: 1;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 6px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.kpi-icon {
+  font-size: 28px;
+  color: #00E5FF;
+}
+.kpi-info {
+  display: flex;
+  flex-direction: column;
+}
+.kpi-label {
+  font-size: 12px;
+  color: #999;
+  margin-bottom: 4px;
+}
+.kpi-value {
+  font-size: 28px;
+  font-weight: bold;
+  color: #00E5FF;
+  line-height: 1;
+}
+
 @media (max-width: 768px) {
   .dashboard {
     height: auto;
@@ -301,6 +444,16 @@ const loadRankChart = async () => {
   }
   .chart-card {
     min-height: 220px;
+  }
+  .map-card {
+    min-height: 300px;
+  }
+  .kpi-cards {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .kpi-value {
+    font-size: 24px;
   }
 }
 </style>
