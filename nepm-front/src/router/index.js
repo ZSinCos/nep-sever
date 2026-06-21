@@ -1,6 +1,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import Login from '../views/Login.vue'
 import Index from '../views/Index.vue'
+import Home from '../views/Home.vue'
 
 import FeedbackList from '../views/feedback/FeedbackList.vue'
 import StatisticsList from '../views/feedback/StatisticsList.vue'
@@ -20,7 +21,7 @@ const routes = [
     name: 'Index',
     component: Index,
     children: [
-      { path: '/index', component: { template: '<div style="padding:20px;"><h2>欢迎使用东软环保公众监督系统管理端</h2></div>' } },
+      { path: '/index', component: Home },
       { path: '/index/feedbackList', component: FeedbackList },
       { path: '/index/statisticsList', component: StatisticsList },
       { path: '/index/statisticsInfo', component: StatisticsInfo },
