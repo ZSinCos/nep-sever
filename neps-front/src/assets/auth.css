@@ -157,6 +157,15 @@
     left: 12px;
     font-size: 22px;
   }
+
+  .el-form-item__label {
+    font-size: 14px !important;
+  }
+
+  .el-input__wrapper,
+  .cs-trigger {
+    height: 46px !important;
+  }
 }
 
 /* 大屏/平板 */
@@ -182,4 +191,44 @@
     height: 58px;
     font-size: 28px;
   }
+
+  .el-form-item__label {
+    font-size: 16px !important;
+  }
+
+  .el-input__wrapper,
+  .cs-trigger {
+    height: 54px !important;
+  }
+}
+
+/* ===== Element Plus 表单公共样式 ===== */
+.el-form-item {
+  margin-bottom: 22px !important;
+}
+
+.el-form-item__label {
+  color: #5f6f76 !important;
+  font-weight: 600 !important;
+  font-size: 15px !important;
+  text-align: left !important;
+}
+
+.el-input__wrapper {
+  border-radius: 12px !important;
+  background: #fafafa !important;
+  box-shadow: 0 0 0 2px #e7e7e7 inset !important;
+  height: 50px !important;
+}
+
+.el-input__wrapper:hover {
+  box-shadow: 0 0 0 2px #74bfd0 inset !important;
+}
+
+.el-input__wrapper.is-focus {
+  box-shadow: 0 0 0 2px #74bfd0 inset !important;
+}
+
+.cs-trigger {
+  height: 50px;
 }

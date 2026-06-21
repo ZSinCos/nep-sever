@@ -1,6 +1,8 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
+import ElementPlus from 'element-plus'
+import 'element-plus/dist/index.css'
 import 'font-awesome/css/font-awesome.min.css'
 
 router.beforeEach(function(to,from,next){
@@ -13,4 +15,4 @@ router.beforeEach(function(to,from,next){
     next();
 });
 
-createApp(App).use(router).mount('#app')
+createApp(App).use(router).use(ElementPlus).mount('#app')

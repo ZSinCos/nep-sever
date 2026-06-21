@@ -10,45 +10,46 @@
 
     <div class="auth-bottom register-bottom">
       <div class="auth-card register-card">
-        <div class="register-form">
-          <div class="register-input-item">
-            <label>手机号码</label>
-            <input
-                type="text"
+        <el-form
+            ref="formRef"
+            :model="supervisor"
+            :rules="rules"
+            label-width="84px"
+            class="register-form"
+        >
+          <el-form-item label="手机号码" prop="telId">
+            <el-input
                 v-model="supervisor.telId"
                 placeholder="请输入手机号码"
             />
-          </div>
+          </el-form-item>
 
-          <div class="register-input-item">
-            <label>真实姓名</label>
-            <input
-                type="text"
+          <el-form-item label="真实姓名" prop="supervisorName">
+            <el-input
                 v-model="supervisor.supervisorName"
                 placeholder="真实姓名便于我们联系您"
             />
-          </div>
+          </el-form-item>
 
-          <div class="register-input-item">
-            <label>密码</label>
-            <input
-                type="password"
+          <el-form-item label="密码" prop="supervisorPassword">
+            <el-input
                 v-model="supervisor.supervisorPassword"
-                placeholder="请输入密码"
-            />
-          </div>
-
-          <div class="register-input-item">
-            <label>确认密码</label>
-            <input
                 type="password"
-                v-model="confirmPassword"
-                placeholder="请再次输入密码"
+                placeholder="请输入密码"
+                show-password
             />
-          </div>
+          </el-form-item>
 
-          <div class="register-input-item">
-            <label>省份</label>
+          <el-form-item label="确认密码" prop="confirmPassword">
+            <el-input
+                v-model="supervisor.confirmPassword"
+                type="password"
+                placeholder="请再次输入密码"
+                show-password
+            />
+          </el-form-item>
+
+          <el-form-item label="省份" prop="province">
             <CustomSelect
                 v-model="supervisor.province"
                 :options="provinceOptions"
@@ -57,10 +58,9 @@
                 placeholder="请选择省"
                 @change="provinceChange"
             />
-          </div>
+          </el-form-item>
 
-          <div class="register-input-item">
-            <label>城市</label>
+          <el-form-item label="城市" prop="city">
             <CustomSelect
                 v-model="supervisor.city"
                 :options="cityOptions"
@@ -69,8 +69,8 @@
                 placeholder="请选择市"
                 :disabled="!supervisor.province"
             />
-          </div>
-        </div>
+          </el-form-item>
+        </el-form>
 
         <button class="auth-btn register-btn" @click="register">注册</button>
       </div>
@@ -89,20 +89,54 @@ import CustomSelect from '../components/CustomSelect.vue';
 
 const axios = inject('axios');
 const router = useRouter();
+const formRef = ref(null);
 
 const supervisor = ref({
   telId: '',
   supervisorName: '',
   supervisorPassword: '',
+  confirmPassword: '',
   province: '',
   city: '',
   registerDate: ''
 });
 
-const confirmPassword = ref('');
 const provinceList = ref([]);
 const cityList = ref([]);
 const provinceIdMap = {};
+
+const validateConfirmPassword = (rule, value, callback) => {
+  if (value !== supervisor.value.supervisorPassword) {
+    callback(new Error('两次密码不一致'));
+  } else {
+    callback();
+  }
+};
+
+const rules = {
+  telId: [
+    { required: true, message: '请输入手机号码', trigger: 'blur' },
+    { pattern: /^1[3-9]\d{9}$/, message: '手机号码格式不正确', trigger: 'blur' }
+  ],
+  supervisorName: [
+    { required: true, message: '请输入姓名', trigger: 'blur' },
+    { min: 2, max: 20, message: '姓名长度应在2-20个字符之间', trigger: 'blur' }
+  ],
+  supervisorPassword: [
+    { required: true, message: '请输入密码', trigger: 'blur' },
+    { min: 6, message: '密码长度不能少于6位', trigger: 'blur' }
+  ],
+  confirmPassword: [
+    { required: true, message: '请再次输入密码', trigger: 'blur' },
+    { validator: validateConfirmPassword, trigger: 'blur' }
+  ],
+  province: [
+    { required: true, message: '请选择省', trigger: 'change' }
+  ],
+  city: [
+    { required: true, message: '请选择市', trigger: 'change' }
+  ]
+};
 
 const provinceOptions = computed(() =>
     provinceList.value.map(item => ({ ...item, label: item.provinceName, value: item.provinceName }))
@@ -144,58 +178,13 @@ const provinceChange = async (val) => {
 };
 
 const register = async () => {
-  if (!supervisor.value.telId) {
-    alert('请输入手机号码');
-    return;
-  }
-  if (!/^1[3-9]\d{9}$/.test(supervisor.value.telId)) {
-    alert('手机号码格式不正确');
-    return;
-  }
+  const valid = await formRef.value.validate().catch(() => false);
+  if (!valid) return;
 
-  if (!supervisor.value.supervisorName) {
-    alert('请输入姓名');
-    return;
-  }
-  if (
-      supervisor.value.supervisorName.length < 2 ||
-      supervisor.value.supervisorName.length > 20
-  ) {
-    alert('姓名长度应在2-20个字符之间');
-    return;
-  }
-
-  if (!supervisor.value.supervisorPassword) {
-    alert('请输入密码');
-    return;
-  }
-  if (supervisor.value.supervisorPassword.length < 6) {
-    alert('密码长度不能少于6位');
-    return;
-  }
-
-  if (!confirmPassword.value) {
-    alert('请再次输入密码');
-    return;
-  }
-  if (supervisor.value.supervisorPassword !== confirmPassword.value) {
-    alert('两次密码不一致');
-    return;
-  }
-
-  if (!supervisor.value.province) {
-    alert('请选择省');
-    return;
-  }
-  if (!supervisor.value.city) {
-    alert('请选择市');
-    return;
-  }
-
-  // 检查手机号是否已注册
   try {
     const checkRes = await axios.get(
-        '/supervisor/getSupervisorById/' + supervisor.value.telId
+        '/supervisor/getSupervisorById/' + supervisor.value.telId,
+        { silentError: true }
     );
     if (checkRes.data.code === 200 && checkRes.data.data) {
       alert('该手机号码已被注册，请直接登录');
@@ -223,101 +212,23 @@ const register = async () => {
 </script>
 
 <style scoped>
-/* ===== 注册页特有样式 ===== */
-
-/* 卡片最小高度 */
 .register-card {
   min-height: 520px;
 }
 
-/* 表单区域 */
 .register-form {
   display: flex;
   flex-direction: column;
-  gap: 8px;
 }
 
-/* 输入框容器 */
-.register-input-item {
-  display: flex;
-  align-items: center;
-  min-height: 50px;
-  padding: 0 2px;
-  box-sizing: border-box;
-}
-
-
-/* 左侧标签 */
-.register-input-item label {
-  width: 84px;
-  flex-shrink: 0;
-  font-size: 15px;
-  color: #5f6f76;
-  font-weight: 600;
-  line-height: 1.2;
-}
-
-
-/* 输入框 */
-.register-input-item input {
-  flex: 1;
-  min-height: 43px;
-  border: 2px solid #e7e7e7;
-  border-radius: 12px;
-  background: #fafafa;
-  box-sizing: border-box;
-  padding: 0 14px;
-  font-size: 15px;
-  color: #666;
-  outline: none;
-}
-
-.register-input-item input::placeholder {
-  color: #bfc5c8;
-}
-
-/* 下拉框高度适配 */
-.register-input-item :deep(.cs-trigger) {
-  height: 50px;
-}
-
-/* 注册按钮上边距 */
 .register-btn {
   margin-top: 10px;
   font-weight: bold;
 }
 
-/* ===== 响应式适配 ===== */
-
-/* 小屏手机 */
 @media (max-width: 420px) {
   .register-card {
     min-height: 480px;
-  }
-
-  .register-input-item {
-    flex-direction: column;
-    align-items: stretch;
-    min-height: auto;
-    gap: 8px;
-  }
-
-  .register-input-item label {
-    width: auto;
-    font-size: 14px;
-    padding-left: 2px;
-  }
-
-  .register-input-item input {
-    height: 46px;
-    font-size: 14px;
-  }
-
-  .register-input-item :deep(.cs-trigger) {
-    height: 46px;
-    font-size: 14px;
-    padding-right: 32px;
-    padding-left: 12px;
   }
 
   .register-btn {
@@ -325,25 +236,9 @@ const register = async () => {
   }
 }
 
-/* 大屏/平板 */
 @media (min-width: 768px) {
   .register-card {
     min-height: 560px;
-  }
-
-  .register-input-item label {
-    width: 96px;
-    font-size: 16px;
-  }
-
-  .register-input-item input {
-    height: 54px;
-    font-size: 16px;
-  }
-
-  .register-input-item :deep(.cs-trigger) {
-    height: 54px;
-    font-size: 16px;
   }
 }
 </style>

@@ -1,6 +1,5 @@
 <template>
   <div class="auth-page login-page">
-    <!-- 顶部：头图 + 标题 -->
     <div class="auth-top login-top">
       <div class="auth-hero login-hero"></div>
 
@@ -14,28 +13,24 @@
       </div>
     </div>
 
-    <!-- 底部：登录卡片 -->
     <div class="auth-bottom login-bottom">
       <div class="auth-card login-card">
-        <div class="auth-input-item">
-          <i class="fa fa-user-o"></i>
-          <input
-              type="text"
-              v-model="telId"
-              placeholder="输入手机号"
-          />
-        </div>
+        <el-form ref="formRef" :model="form" :rules="rules" label-width="84px" class="login-form">
+          <el-form-item label="手机号码" prop="telId">
+            <el-input v-model="form.telId" placeholder="请输入手机号码" />
+          </el-form-item>
 
-        <div class="auth-input-item">
-          <i class="fa fa-lock"></i>
-          <input
-              type="password"
-              v-model="supervisorPassword"
-              placeholder="输入登录密码"
-          />
-        </div>
+          <el-form-item label="密码" prop="supervisorPassword">
+            <el-input
+                v-model="form.supervisorPassword"
+                type="password"
+                placeholder="请输入密码"
+                show-password
+            />
+          </el-form-item>
+        </el-form>
+
         <button class="auth-btn register-btn" @click="goRegister">注册</button>
-
         <button class="auth-btn login-btn" @click="login">登录</button>
       </div>
     </div>
@@ -50,29 +45,32 @@ import '../assets/auth.css';
 
 const axios = inject('axios');
 const router = useRouter();
+const formRef = ref(null);
 
-const telId = ref('');
-const supervisorPassword = ref('');
+const form = ref({
+  telId: '',
+  supervisorPassword: ''
+});
+
+const rules = {
+  telId: [
+    { required: true, message: '请输入手机号码', trigger: 'blur' },
+    { pattern: /^1[3-9]\d{9}$/, message: '手机号码格式不正确', trigger: 'blur' }
+  ],
+  supervisorPassword: [
+    { required: true, message: '请输入密码', trigger: 'blur' }
+  ]
+};
 
 const login = async () => {
-  if (!telId.value) {
-    alert('请输入手机号码');
-    return;
-  }
-  if (!/^1[3-9]\d{9}$/.test(telId.value)) {
-    alert('手机号码格式不正确');
-    return;
-  }
-  if (!supervisorPassword.value) {
-    alert('请输入密码');
-    return;
-  }
+  const valid = await formRef.value.validate().catch(() => false);
+  if (!valid) return;
 
   try {
     const res = await axios.get('/supervisor/getSupervisorByIdByPass', {
       params: {
-        telId: telId.value,
-        supervisorPassword: supervisorPassword.value
+        telId: form.value.telId,
+        supervisorPassword: form.value.supervisorPassword
       }
     });
 
@@ -94,14 +92,11 @@ const goRegister = () => {
 </script>
 
 <style scoped>
-
-/* 顶部背景图 */
 .login-hero {
   background-image: url('../assets/login-banner.png');
   height: clamp(180px, 32vh, 280px);
 }
 
-/* 标题区域 */
 .login-title {
   margin-top: 20px;
   padding: 30px 20px 0;
@@ -136,20 +131,13 @@ const goRegister = () => {
   white-space: nowrap;
 }
 
-
-/* 卡片最小高度 */
 .login-card {
   min-height: 300px;
   margin-top: 20px;
 }
-/* 输入框容器 */
-.auth-input-item {
-  display: flex;
-  align-items: center;
-  min-height: 55px;
+
+.login-form {
   padding: 0 20px;
-  box-sizing: border-box;
-  margin-bottom: 20px;
 }
 
 .auth-btn {
@@ -157,10 +145,6 @@ const goRegister = () => {
   font-weight: bold;
 }
 
-
-/* ===== 响应式适配 ===== */
-
-/* 大屏/平板 */
 @media (min-width: 768px) {
   .login-hero {
     height: 300px;

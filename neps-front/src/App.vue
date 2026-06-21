@@ -27,12 +27,20 @@ axios.interceptors.response.use(
     const res = response.data;
     // 如果返回的 code 不是 200，统一处理为错误
     if (res.code && res.code !== 200) {
-      alert(res.message || '请求失败');
+      // 如果配置了 silentError，不弹窗提示
+      if (!response.config.silentError) {
+        alert(res.message || '请求失败');
+      }
       return Promise.reject(new Error(res.message || '请求失败'));
     }
     return response;
   },
   error => {
+    // 如果配置了 silentError，不弹窗提示
+    if (error.config && error.config.silentError) {
+      return Promise.reject(error);
+    }
+
     // HTTP 错误状态码处理
     if (error.response) {
       const status = error.response.status;
