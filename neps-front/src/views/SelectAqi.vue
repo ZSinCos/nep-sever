@@ -109,7 +109,7 @@ const submitFeedback = async () => {
 .aqi-info-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 3.2vw;
+  font-size: 15px;
   border: 1px solid #e0e0e0;
 }
 
@@ -147,9 +147,8 @@ const submitFeedback = async () => {
 
 .aqi-desc {
   color: #555;
-  font-size: 13px;
-  line-height: 1.2;
-  font-weight: bolder;
+  font-size: 20px;
+  line-height: 1.6;
 }
 
 .select-label {
@@ -162,14 +161,14 @@ const submitFeedback = async () => {
 .aqi-radio-group {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 3vw;
 }
 
 .aqi-radio-item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.5vw;
+  gap: 10px;
   cursor: pointer;
 }
 
@@ -184,14 +183,14 @@ const submitFeedback = async () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #000000;
-  font-size: 15px;
+  color: #FFF;
+  font-size: 3vw;
   font-weight: bold;
 }
 
 .aqi-radio-dot {
-  width: 4.5vw;
-  height: 4.5vw;
+  width: 4vw;
+  height: 4vw;
   border-radius: 50%;
   border: 2px solid #ccc;
   background: #FFF;
@@ -227,62 +226,85 @@ const submitFeedback = async () => {
   border-color: #74bfd0;
 }
 
-.btn{
-  height: 54px;
-  width: 100%;
-  font-size: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 
 
-/* ===== 响应式适配 ===== */
+/* ===== 桌面端适配 ===== */
 @media (min-width: 768px) {
+  .view-container {
+    width: 400px;
+  }
+
+  .aqi-table-card {
+    border-radius: 8px;
+    margin-bottom: 12px;
+  }
+
   .aqi-info-table {
-    font-size: 14px;
+    font-size: 13px;
+  }
+
+  .aqi-info-table td {
+    padding: 10px 8px;
   }
 
   .aqi-level {
-    width: 60px;
-    font-size: 18px;
+    width: 50px;
+    font-size: 15px;
   }
 
   .aqi-name {
-    width: 90px;
-    font-size: 16px;
+    width: 80px;
+    font-size: 13px;
   }
 
   .aqi-desc {
-    font-size: 13px;
-    padding: 12px 10px;
+    font-size: 14px;
+  }
+
+  .view-card {
+    padding: 16px;
+    border-radius: 8px;
+    margin-bottom: 12px;
   }
 
   .select-label {
-    font-size: 16px;
+    font-size: 15px;
     margin-bottom: 12px;
   }
 
   .aqi-radio-group {
-    gap: 12px;
+    gap: 10px;
+  }
+
+  .aqi-radio-item {
+    gap: 6px;
   }
 
   .aqi-radio-block {
-    width: 44px;
-    height: 30px;
+    width: 40px;
+    height: 24px;
     border-radius: 4px;
-    font-size: 14px;
+    font-size: 12px;
   }
 
   .aqi-radio-dot {
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
   }
 
   .feedback-textarea {
-    min-height: 120px;
+    min-height: 100px;
     font-size: 14px;
-    padding: 12px;
+    padding: 10px;
+    border-radius: 8px;
+  }
+
+  .btn {
+    height: 44px;
+    font-size: 16px;
+    border-radius: 8px;
+    letter-spacing: 6px;
+    margin-top: 8px;
   }
 }
 </style>

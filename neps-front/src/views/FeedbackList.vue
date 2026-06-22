@@ -12,7 +12,10 @@
       </div>
       <div v-for="item in feedbackList" :key="item.afId" class="view-card">
         <div class="view-flex-between view-mb-2">
-          <span style="font-weight: bold;">{{ item.province }} {{ item.city }}</span>
+          <span style="font-weight: bold; display: flex; align-items: center;">
+            <span class="aqi-badge" :style="{backgroundColor: getAqiColor(item.afAqi)}">{{ getAqiLevel(item.afAqi) }}</span>
+            {{ item.province }} {{ item.city }}
+          </span>
           <span :style="{color: getStateColor(item.afState)}">{{ getStateText(item.afState) }}</span>
         </div>
         <div style="color: #666;" class="view-text-md view-mb-2">{{ item.afAddress }}</div>
@@ -36,6 +39,9 @@ const router = useRouter();
 
 const feedbackList = ref([]);
 
+const levelMap = { 1: '一', 2: '二', 3: '三', 4: '四', 5: '五', 6: '六' };
+const colorMap = { 1: '#00E400', 2: '#CCCC00', 3: '#FF7E00', 4: '#FF0000', 5: '#99004C', 6: '#7E0023' };
+
 onMounted(async () => {
   const supervisor = getSessionStorage('supervisor');
   if (supervisor) {
@@ -45,6 +51,9 @@ onMounted(async () => {
     feedbackList.value = res.data.data;
   }
 });
+
+const getAqiLevel = (aqiId) => levelMap[aqiId] || '';
+const getAqiColor = (aqiId) => colorMap[aqiId] || '#999';
 
 const getStateText = (state) => {
   const map = { 0: '待指派', 1: '已指派', 2: '已确认' };
@@ -73,10 +82,33 @@ const getStateColor = (state) => {
   -webkit-overflow-scrolling: touch;
 }
 
+.aqi-badge {
+  display: inline-block;
+  width: 6vw;
+  height: 4vw;
+  border-radius: 1vw;
+  color: #FFF;
+  font-size: 2.5vw;
+  font-weight: bold;
+  text-align: center;
+  line-height: 4vw;
+  flex-shrink: 0;
+  margin-right: 2vw;
+}
+
 @media (min-width: 768px) {
   .scroll-container {
     width: 400px;
     margin-top: 20px;
+  }
+
+  .aqi-badge {
+    width: 28px;
+    height: 20px;
+    border-radius: 4px;
+    font-size: 12px;
+    line-height: 20px;
+    margin-right: 8px;
   }
 }
 </style>
